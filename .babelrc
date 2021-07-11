@@ -6,7 +6,6 @@
   "plugins": [
     "@babel/proposal-class-properties",
     "@babel/proposal-object-rest-spread",
-    "@babel/plugin-transform-runtime",
-    "lodash"
+    "@babel/plugin-transform-runtime"
   ]
 }
