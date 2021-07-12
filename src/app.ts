@@ -1,6 +1,12 @@
 import express from 'express';
+
+// DB
 import mongoose from 'mongoose';
+
+// Config
 import config from './config';
+
+// Middlewares
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
