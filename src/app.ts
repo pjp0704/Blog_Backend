@@ -14,6 +14,8 @@ app.use(helmet());
 app.use(cors({ credentials: true }));
 app.use(morgan('dev'));
 
+app.use(express.json());
+
 mongoose
   .connect(MONGO_URL as string, {
     useNewUrlParser: true,
