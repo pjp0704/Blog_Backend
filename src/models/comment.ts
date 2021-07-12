@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 
 const CommentSchema = new mongoose.Schema({
-  contents: {
+  content: {
     type: String,
     required: true,
   },
