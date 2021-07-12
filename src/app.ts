@@ -12,6 +12,9 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 
+// Router
+import router from './routes';
+
 const app = express();
 const { MONGO_URL } = config;
 
@@ -26,10 +29,11 @@ mongoose
   .connect(MONGO_URL as string, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => console.log('Connected to MongoDB'))
   .catch((e) => console.log(e));
 
-app.get('/');
+app.use('/', router);
 
 export default app;
