@@ -6,7 +6,6 @@ import config from '../../config';
 const { JWT_SECRET } = config;
 
 import User from '../../models/user';
-import { IUser } from '../../types/user.types';
 
 const router = express.Router();
 
@@ -29,7 +28,7 @@ router.post('/', async (req, res) => {
       .json({ msg: 'Invalid request. Please fill out all the required field' });
   }
 
-  User.findOne({ email }).then((user: IUser) => {
+  User.findOne({ email }).then((user: any) => {
     if (user)
       return res
         .status(400)
