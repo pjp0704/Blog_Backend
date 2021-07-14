@@ -9,7 +9,7 @@ const auth = (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  const token = req.header('Authentication');
+  const token = req.headers.authorization?.split('Bearer ')[1];
 
   if (!token) {
     return res.status(401).json({ msg: 'No token provided' });
