@@ -1,5 +1,8 @@
 import app from './app';
+import config from './config';
 
-app.listen(process.env.port || 8080, () => {
-  console.log('listening on port ' + (process.env.port || 8080));
+const { PORT } = config;
+
+app.listen(PORT || 8080, () => {
+  console.log('listening on port ' + (PORT || 8080));
 });
