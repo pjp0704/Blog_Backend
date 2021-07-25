@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import auth from '../../middleware/auth';
 
 import config from '../../config';
 const { JWT_SECRET } = config;
@@ -64,6 +65,17 @@ router.post('/', async (req, res) => {
       });
     });
   });
+});
+
+router.get('/detail', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) throw Error('No users found');
+    res.json(user);
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ msg: e.message });
+  }
 });
 
 export default router;
