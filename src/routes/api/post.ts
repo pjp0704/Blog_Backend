@@ -8,6 +8,9 @@ import path from 'path';
 import aws from 'aws-sdk';
 
 import dotenv from 'dotenv';
+import moment from 'moment';
+import Category from '../../models/category';
+import User from '../../models/user';
 dotenv.config();
 
 const s3 = new aws.S3({
@@ -37,11 +40,46 @@ router.get('/', async (_req, res) => {
   res.json(postFindRes);
 });
 
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, upload.none(), async (req, res) => {
   try {
-    const { title, content, fileUrl, creator } = req.body;
-    const newPost = await Post.create({ title, content, fileUrl, creator });
-    res.json(newPost);
+    const { title, content, fileUrl, creator, category } = req.body;
+    const newPost = await Post.create({
+      title,
+      content,
+      fileUrl,
+      creator,
+      date: moment().format('YYYY-MM-DD hh:mm:ss'),
+    });
+
+    const result = await Category.findOne({
+      categoryName: category,
+    });
+
+    if (result == null) {
+      const newCategory = await Category.create({
+        categoryName: category,
+      });
+      await Post.findByIdAndUpdate(newPost._id, {
+        $push: { category: newCategory._id },
+      });
+      await Category.findByIdAndUpdate(newCategory._id, {
+        $push: { posts: newPost._id },
+      });
+      await User.findByIdAndUpdate(req.user.id, {
+        $push: { post: newPost._id },
+      });
+    } else {
+      await Category.findByIdAndUpdate(result._id, {
+        $push: { posts: newPost._id },
+      });
+      await Post.findByIdAndUpdate(newPost._id, {
+        category: result._id,
+      });
+      await User.findByIdAndUpdate(req.user.id, {
+        $push: { post: newPost._id },
+      });
+    }
+    return res.redirect(`/api/post/${newPost._id}`);
   } catch (e) {
     console.log(e);
   }
